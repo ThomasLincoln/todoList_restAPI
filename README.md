@@ -14,6 +14,7 @@ classDiagram
 
     class Task {
         +int id_task
+        +int id_usuario
         +String titulo
         +String descricao
         +String data_final
@@ -22,9 +23,10 @@ classDiagram
     }
 
     class Project {
+        +int id_projeto
+        +int id_usuario
         +String titulo
         +String descricao
-        +int id_projeto
     }
 
     User "1" --> "0..*" Task : has
