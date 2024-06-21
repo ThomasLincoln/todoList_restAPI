@@ -1,5 +1,6 @@
 # todoList_restAPI
 
+```mermaid
 classDiagram
     class User {
         +String name
@@ -28,3 +29,4 @@ classDiagram
 
     User "1" --> "0..*" Task : has
     User "1" --> "0..*" Project : has
+```
