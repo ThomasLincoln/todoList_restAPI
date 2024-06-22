@@ -15,7 +15,7 @@ public class Project {
   private long id_projeto;
 
   @ManyToOne
-  @JoinColumn(name = "user", nullable = false)
+  @JoinColumn(name = "id_usuario", nullable = false)
   private User user;
   
   private String titulo;
