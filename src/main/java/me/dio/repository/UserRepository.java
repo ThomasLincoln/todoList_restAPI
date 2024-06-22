@@ -7,5 +7,5 @@ import me.dio.models.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
+  boolean existsByLogin(String login);
 }
