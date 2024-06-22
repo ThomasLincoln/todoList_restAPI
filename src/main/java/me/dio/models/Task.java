@@ -16,7 +16,7 @@ public class Task {
 
   @ManyToOne
   @JoinColumn(name = "id_usuario", nullable = false)
-  private long id_usuario;
+  private User user;
 
   private String titulo;
   private String descricao;
@@ -36,12 +36,12 @@ public class Task {
     this.id_task = id_task;
   }
 
-  public long getId_usuario() {
-    return id_usuario;
+  public User getUser() {
+    return user;
   }
 
-  public void setId_usuario(long id_usuario) {
-    this.id_usuario = id_usuario;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public String getTitulo() {

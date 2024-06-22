@@ -15,8 +15,8 @@ public class Project {
   private long id_projeto;
 
   @ManyToOne
-  @JoinColumn(name = "id_usuario", nullable = false)
-  private long id_usuario;
+  @JoinColumn(name = "user", nullable = false)
+  private User user;
   
   private String titulo;
   private String descricao;
@@ -33,14 +33,6 @@ public class Project {
     this.id_projeto = id_projeto;
   }
 
-  public long getId_usuario() {
-    return id_usuario;
-  }
-
-  public void setId_usuario(long id_usuario) {
-    this.id_usuario = id_usuario;
-  }
-
   public String getTitulo() {
     return titulo;
   }
@@ -55,6 +47,14 @@ public class Project {
 
   public void setDescricao(String descricao) {
     this.descricao = descricao;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
 }
