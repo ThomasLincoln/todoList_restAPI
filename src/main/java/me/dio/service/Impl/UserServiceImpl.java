@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User create(User userToCreate) {
-    if(userToCreate.getLogin() != null && userRepository.exexistsByLogin(userToCreate.getLogin())){
-      throw new IllegalArgumentException("Esse Login já está em uso?");
+    if(userToCreate.getLogin() != null && userRepository.existsByLogin(userToCreate.getLogin())){
+      throw new IllegalArgumentException("Esse Login já está em uso");
     }
     return userRepository.save(userToCreate);
   }
