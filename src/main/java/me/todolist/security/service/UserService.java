@@ -1,6 +1,6 @@
-package me.dio.service;
+package me.todolist.security.service;
 
-import me.dio.models.User;
+import me.todolist.models.User;
 
 public interface UserService {
   User findById(Long id);

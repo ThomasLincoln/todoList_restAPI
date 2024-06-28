@@ -1,4 +1,4 @@
-package me.dio.controller.exception;
+package me.todolist.controller.exception;
 
 import java.util.NoSuchElementException;
 
