@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,12 +62,14 @@ public class UserRestController {
     this.userService = userService;
   }
 
+  @CrossOrigin
   @GetMapping("/find/{id}")
   public ResponseEntity<User> findById(@PathVariable Long id) {
     var user = userService.findById(id);
     return ResponseEntity.ok(user);
   }
-
+  
+  @CrossOrigin
   // Cadastro
   @PostMapping("/auth/signup")
   public ResponseEntity<?> userSignup(@RequestBody SignupRequest signUpRequest) {
@@ -122,6 +125,7 @@ public class UserRestController {
   }
 
   // Login
+  @CrossOrigin
   @PostMapping("/auth/signin")
   public ResponseEntity<?> userSignin(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authentication = authenticationManager
@@ -144,6 +148,7 @@ public class UserRestController {
   }
 
   // Logout
+  @CrossOrigin
   @PostMapping("/auth/signout")
   public ResponseEntity<?> userSignout(@RequestBody String entity) {
     ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
