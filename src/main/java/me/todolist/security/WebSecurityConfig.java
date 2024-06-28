@@ -95,7 +95,7 @@ public class WebSecurityConfig {
           @Override
           public void addCorsMappings(CorsRegistry registry) {
               registry.addMapping("/**")
-                      .allowedOrigins("*")
+                      .allowedOrigins("https://todolistrestapi-production.up.railway.app/")
                       .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
                       .allowedHeaders("*")
                       .allowCredentials(true);
