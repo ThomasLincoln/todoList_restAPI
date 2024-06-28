@@ -30,7 +30,7 @@ import me.todolist.security.service.Impl.UserDetailsServiceImpl;
 // Adiciona a segurança a nível de método
 @Configuration
 @EnableMethodSecurity
-public class WebSecurityConfig implements WebMvcConfigurer {
+public class WebSecurityConfig {
 
   // Injeta o caminho do console h2 nas propriedades
   // @Value("${spring.h2.console.path}")
@@ -89,13 +89,17 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     return http.build();
   }
 
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**")
-        .allowedOrigins("*") // Permitir acesso de qualquer origem
-        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        .allowedHeaders("*")
-        .allowCredentials(true)
-        .maxAge(3600);
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+      return new WebMvcConfigurer() {
+          @Override
+          public void addCorsMappings(CorsRegistry registry) {
+              registry.addMapping("/**")
+                      .allowedOrigins("*")
+                      .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
+                      .allowedHeaders("*")
+                      .allowCredentials(true);
+          }
+      };
   }
 }
