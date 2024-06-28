@@ -31,8 +31,8 @@ import me.todolist.security.service.Impl.UserDetailsServiceImpl;
 public class WebSecurityConfig {
 
   // Injeta o caminho do console h2 nas propriedades
-  @Value("${spring.h2.console.path}")
-  private String h2ConsolePath;
+  // @Value("${spring.h2.console.path}")
+  // private String h2ConsolePath;
 
   // Injeta o serviço de detalhes do usuário personalizado.
   @Autowired
@@ -78,8 +78,8 @@ public class WebSecurityConfig {
             .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
             .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
             .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/h2-ui/**")).permitAll()
+            // .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+            // .requestMatchers(new AntPathRequestMatcher("/h2-ui/**")).permitAll()
             .anyRequest().authenticated());
     http.headers(headers -> headers.frameOptions(frameOption -> frameOption.sameOrigin()));
     http.authenticationProvider(authenticationProvider());
