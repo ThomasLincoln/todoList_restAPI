@@ -93,7 +93,7 @@ public class WebSecurityConfig {
   public WebMvcConfigurer corsConfigurer() {
       return new WebMvcConfigurer() {
           @Override
-          public void addCorsMappings(CorsRegistry registry) {
+          public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
               registry.addMapping("/**")
                       .allowedOrigins("https://todolistrestapi-production.up.railway.app/")
                       .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
