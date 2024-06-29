@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>me.dio</groupId>
-	<artifactId>santander-dev-week-2024</artifactId>
+	<artifactId>todo-list-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>santander-dev-week-2024</name>
+	<name>todo list</name>
 	<description>Java RESTful API criada para a Santander Dev week 2024</description>
 	<url />
 	<licenses>

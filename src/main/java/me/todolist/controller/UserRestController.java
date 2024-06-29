@@ -2,6 +2,7 @@ package me.todolist.controller;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Set;
 
@@ -9,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,7 +71,7 @@ public class UserRestController {
     var user = userService.findById(id);
     return ResponseEntity.ok(user);
   }
-  
+
   @CrossOrigin
   // Cadastro
   @PostMapping("/auth/signup")
@@ -92,6 +95,7 @@ public class UserRestController {
     Set<Role> roles = new HashSet<>();
 
     if (strRoles == null) {
+      System.out.println("criaremos um usuário");
       Role userRole = roleRepository.findByName(ERole.ROLE_USER)
           .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
       roles.add(userRole);
@@ -102,13 +106,6 @@ public class UserRestController {
             Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(adminRole);
-
-            break;
-          case "mod":
-            Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(modRole);
-
             break;
           default:
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -150,9 +147,57 @@ public class UserRestController {
   // Logout
   @CrossOrigin
   @PostMapping("/auth/signout")
-  public ResponseEntity<?> userSignout(@RequestBody String entity) {
+  @PreAuthorize("has")
+  public ResponseEntity<?> userSignout() {
     ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
         .body(new MessageResponse("You've been signed out!"));
+  }
+
+  // admin deletar um usuário
+  @CrossOrigin
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<?> userDelete(@PathVariable Long id) {
+    // Obter o usuário autenticado
+    Authentication authentication = SecurityContextHolder.getContext()
+      .getAuthentication();
+    UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication
+      .getPrincipal();
+
+    boolean hasAdminRole = userDetailsImpl.getAuthorities().stream()
+        .anyMatch(grantedAuthority -> grantedAuthority
+            .getAuthority().equals("ROLE_ADMIN"));
+
+    if (hasAdminRole) {
+      Optional<User> userOptional = userRepository.findById(id);
+      if (userOptional.isPresent()) {
+        userRepository.delete(userOptional.get());
+        return ResponseEntity
+            .ok(new MessageResponse("User deleted successfully!"));
+      } else {
+        return ResponseEntity
+            .ok(new MessageResponse("Error: the user don't exist"));
+      }
+    } else {
+      return ResponseEntity.status(403)
+          .body(new MessageResponse("Error: You do not have permission to delete this user!"));
+    }
+  }
+
+  // usuário excluir a conta
+  @CrossOrigin
+  @DeleteMapping("auth/delete")
+  public ResponseEntity<?> deleteUserLogged() {
+    Authentication authentication = SecurityContextHolder
+      .getContext().getAuthentication();
+    if(authentication != null && authentication.isAuthenticated()){
+      UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication
+      .getPrincipal();
+      Long userId = userDetailsImpl.getId();
+      userRepository.deleteById(userId);
+      return ResponseEntity
+        .ok(new MessageResponse("User deleted successfully!"));
+    }
+    return ResponseEntity.ok(new MessageResponse("Error: No authenticated user found!")); 
   }
 }
