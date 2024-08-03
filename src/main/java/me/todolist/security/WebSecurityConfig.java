@@ -26,12 +26,16 @@ import me.todolist.security.jwt.AuthEntryPointJwt;
 import me.todolist.security.jwt.AuthTokenFilter;
 import me.todolist.security.service.Impl.UserDetailsServiceImpl;
 
+
 // Define que a classe é uma fonte de configuração de beans
 // Adiciona a segurança a nível de método
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
-
+  
+  @Value("${spring.profiles.active}")
+  private String activeProfile;
+  
   // Injeta o caminho do console h2 nas propriedades
   @Value("${spring.h2.console.path}")
   private String h2ConsolePath;
@@ -75,14 +79,19 @@ public class WebSecurityConfig {
     http.csrf(csrf -> csrf.disable())
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers(new AntPathRequestMatcher("/user/auth/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/h2-ui/**")).permitAll()
-            .anyRequest().authenticated());
+        .authorizeHttpRequests(auth -> {
+            auth.requestMatchers(new AntPathRequestMatcher("/user/auth/**")).permitAll()
+               .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+               .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
+               .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll();
+            
+            // Condicional baseada no perfil ativo
+            if ("dev".equals(activeProfile)) {
+                auth.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/h2-ui/**")).permitAll();
+            }
+            auth.anyRequest().authenticated();
+        });
     http.headers(headers -> headers.frameOptions(frameOption -> frameOption.sameOrigin()));
     http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(authenticationJwAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
