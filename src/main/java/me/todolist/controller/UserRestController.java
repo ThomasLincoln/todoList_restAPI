@@ -147,6 +147,7 @@ public class UserRestController {
   // Logout
   @CrossOrigin
   @PostMapping("/auth/signout")
+  @PreAuthorize("has")
   public ResponseEntity<?> userSignout() {
     ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
